@@ -1,5 +1,6 @@
 package ru.depedence.aimealplanner.dto.groq;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,4 +14,10 @@ public class GroqChatRequest {
     private String model;
     private List<GroqMessage> messages;
     private Double temperature;
+
+    @JsonProperty("max_completion_tokens")
+    private Integer maxCompletionTokens;
+
+    @JsonProperty("reasoning_effort")
+    private String reasoningEffort;
 }
