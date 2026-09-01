@@ -2,6 +2,7 @@ package ru.depedence.aimealplanner.service;
 
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import ru.depedence.aimealplanner.config.GroqProperties;
@@ -10,6 +11,7 @@ import ru.depedence.aimealplanner.dto.groq.GroqChatResponse;
 import ru.depedence.aimealplanner.dto.groq.GroqMessage;
 import ru.depedence.aimealplanner.exception.GroqApiException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class GroqClient {
@@ -21,7 +23,9 @@ public class GroqClient {
         GroqChatRequest request = new GroqChatRequest(
             groqProperties.model(),
             List.of(new GroqMessage("user", prompt)),
-            0.7
+            0.7,
+            4096,
+            "low"
         );
 
         try {
@@ -43,8 +47,14 @@ public class GroqClient {
                 );
             }
 
+            log.info(
+                "Finish reason: {}",
+                response.getChoices().get(0).getFinishReason()
+            );
+
             return response.getChoices().get(0).getMessage().getContent();
         } catch (Exception e) {
+            log.error("Failed to call Groq API", e);
             throw new GroqApiException("Failed to call Groq API", e);
         }
     }

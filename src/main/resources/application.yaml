@@ -9,3 +9,8 @@ groq:
 
 server:
     port: 8080
+
+proxy:
+    enabled: true
+    host: 127.0.0.1
+    port: 10809
