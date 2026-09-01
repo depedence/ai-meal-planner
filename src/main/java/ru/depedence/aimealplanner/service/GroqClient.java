@@ -56,12 +56,10 @@ public class GroqClient {
         GroqChatResponse.Choice choice = response.getChoices().get(0);
         log.info("Finish reason: {}", choice.getFinishReason());
 
-        // Обрезанный ответ разбирать бессмысленно: понятная ошибка лучше,
-        // чем «невалидный JSON» из парсера.
         if (FINISH_REASON_LENGTH.equals(choice.getFinishReason())) {
             throw new InvalidPlanResponseException(
                 "Groq response was truncated at max_completion_tokens=" +
-                groqProperties.maxCompletionTokens(),
+                    groqProperties.maxCompletionTokens(),
                 null
             );
         }
