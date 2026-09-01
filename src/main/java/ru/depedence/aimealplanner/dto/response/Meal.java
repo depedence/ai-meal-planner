@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Meal {
 
+    private Integer dayNumber;
     private MealType type;
     private String dishName;
     private List<Ingredient> ingredients;

@@ -11,5 +11,5 @@ import lombok.NoArgsConstructor;
 public class MealPlanResponse {
 
     private Integer totalEstimatedPrice;
-    private List<DayPlan> days;
+    private List<Meal> meals;
 }

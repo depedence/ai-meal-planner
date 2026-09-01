@@ -8,52 +8,36 @@ public class PromptBuilder {
 
     public String build(MealPlanRequest request) {
         String varietyInstruction = switch (request.getVarietyLevel()) {
-            case SAME -> "Every day should have the exact same meals (same dishes repeated each day).";
-            case MIXED -> "Some meals can repeat across days, but include reasonable variety overall.";
-            case DIFFERENT -> "Every day should have completely different dishes, no repeats.";
+            case SAME -> "the same meals repeated every day";
+            case MIXED -> "moderate variety, some dishes can repeat";
+            case DIFFERENT -> "a fully different set of dishes every day";
         };
 
         return """
-        You are a meal planning assistant. Create a meal plan based on these parameters:
-        - Total budget: %d rubles
-        - Number of days: %d
-        - Number of people: %d
-        - Variety requirement: %s
+        Act as a meal planning assistant for a Russian household. Design a %d-day meal plan
+        for %d people with a total budget of %d rubles that must not be exceeded.
 
-        Rules:
-        - Include exactly 3 meals per day: breakfast, lunch, dinner.
-        - Each dish should be realistic, simple to cook, and use common grocery ingredients.
-        - Estimate a price in rubles for each ingredient and each dish, based on typical Russian grocery prices.
-        - The sum of all estimatedPrice values across the whole plan must be as close as possible to the total budget (%d rubles), and must not exceed it.
-        - Portions should be scaled for %d people.
+        Each day has 3 meals: breakfast, lunch, and dinner. Variety style: %s.
 
-        Respond with ONLY valid JSON, no markdown code fences, no explanations, matching exactly this structure:
+        Use realistic, simple, home-cookable dishes made from common grocery ingredients
+        available in Russia. Each dish should have at most 6 ingredients. Estimate a price
+        in rubles for every ingredient and every dish, using typical Russian grocery prices.
+        All prices must be whole integers.
 
-        {
-          "totalEstimatedPrice": number,
-          "days": [
-            {
-              "dayNumber": number,
-              "meals": [
-                {
-                  "type": "breakfast" | "lunch" | "dinner",
-                  "dishName": "string",
-                  "ingredients": [
-                    {"name": "string", "amount": "string", "estimatedPrice": number}
-                  ],
-                  "estimatedPrice": number
-                }
-              ]
-            }
-          ]
-        }
+        Write all dish names and ingredient names in Russian.
+
+        Respond with a single valid JSON object only — no markdown, no comments, no extra text.
+        Use this exact shape: a "totalEstimatedPrice" number and a flat "meals" array,
+        where every meal entry includes its own "dayNumber":
+
+        {"totalEstimatedPrice":1250,"meals":[{"dayNumber":1,"type":"breakfast","dishName":"Овсянка с бананом","ingredients":[{"name":"овсяные хлопья","amount":"50 г","estimatedPrice":20}],"estimatedPrice":45},{"dayNumber":1,"type":"lunch","dishName":"Гречка с курицей","ingredients":[{"name":"гречка","amount":"100 г","estimatedPrice":15}],"estimatedPrice":80}]}
+
+        Keep the JSON compact, with no line breaks or extra spaces.
         """.formatted(
-            request.getBudget(),
             request.getDays(),
             request.getPeopleCount(),
-            varietyInstruction,
             request.getBudget(),
-            request.getPeopleCount()
+            varietyInstruction
         );
     }
 }
