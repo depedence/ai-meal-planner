@@ -17,7 +17,6 @@ import ru.depedence.aimealplanner.exception.InvalidPlanResponseException;
 @RequiredArgsConstructor
 public class GroqClient {
 
-    /** Ответ обрывается по лимиту токенов, JSON приходит незакрытым. */
     private static final String FINISH_REASON_LENGTH = "length";
 
     private final RestClient groqRestClient;
