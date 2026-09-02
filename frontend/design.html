@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<title>Кастрюля — дизайн-спецификация</title>
+<link rel="icon" type="image/svg+xml" href="logo.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,300;6..72,400;6..72,500&family=Karla:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  body { margin: 0; background: #E9E7E2; }
+  a { color: #C4623F; text-decoration: underline; text-underline-offset: 3px; }
+  a:hover { color: #241C16; }
+</style>
+</helmet>
+
+<div style="display:flex; justify-content:center; padding:0 24px 96px; font-family:'Karla',system-ui,sans-serif; color:#241C16;">
+<div style="width:100%; max-width:1040px; background:#F3EDE4; border-left:1px solid #DCD1C0; border-right:1px solid #DCD1C0; padding:64px 72px 88px; display:flex; flex-direction:column; gap:64px;">
+
+  <!-- Header -->
+  <div style="display:flex; flex-direction:column; gap:14px; border-bottom:1px solid #DCD1C0; padding-bottom:36px;">
+    <div style="display:flex; align-items:center; gap:14px;"><img src="logo.svg" alt="Кастрюля" width="48" height="48" style="display:block; border-radius:12px; flex:0 0 auto;"><div style="display:flex; flex-direction:column; gap:2px;"><div style="font-family:'Newsreader',serif; font-size:22px; color:#241C16; line-height:1.1;">Кастрюля</div><div style="font-size:12px; letter-spacing:.18em; text-transform:uppercase; color:#A2917F;">Дизайн-спецификация · передача в разработку</div></div></div>
+    <div style="font-family:'Newsreader',serif; font-size:52px; line-height:1.05; color:#241C16;">«Тёплая бумага»</div>
+    <div style="font-size:17px; line-height:1.6; color:#6B5B4A; max-width:640px; text-wrap:pretty;">AI-планировщик питания по бюджету. Стек: React + Tailwind CSS. Ниже — токены, компоненты со всеми состояниями, layout-логика и чек-лист вёрстки.</div>
+    <div style="display:flex; gap:28px; padding-top:8px; font-size:13px; color:#8A7B6C;">
+      <div>Версия 1.0</div><div>Экраны: форма ввода, результат (план)</div><div>Единица шага: 4px</div>
+    </div>
+  </div>
+
+  <!-- 1. Палитра -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">01</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Цветовая палитра</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(2,1fr); gap:14px;">
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#F3EDE4; border:1px solid #DCD1C0; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#F3EDE4</div>
+          <div style="font-size:14px; font-weight:600;">bg-base · Фон приложения</div>
+          <div style="font-size:13px; color:#8A7B6C;">Тёплый песочный. Body, шапка формы, нижние панели.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#FBF7F0; border:1px solid #DCD1C0; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#FBF7F0</div>
+          <div style="font-size:14px; font-weight:600;">bg-surface · Поверхность карточек</div>
+          <div style="font-size:13px; color:#8A7B6C;">Карточки дней, панель формы, поля ввода.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#241C16; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#241C16</div>
+          <div style="font-size:14px; font-weight:600;">ink · Основной текст / primary-кнопка</div>
+          <div style="font-size:13px; color:#8A7B6C;">Заголовки, названия блюд, фон главной кнопки.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#6B5B4A; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#6B5B4A</div>
+          <div style="font-size:14px; font-weight:600;">ink-muted · Вторичный текст</div>
+          <div style="font-size:13px; color:#8A7B6C;">Лейблы полей, строки ингредиентов, описания.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#8A7B6C; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#8A7B6C</div>
+          <div style="font-size:14px; font-weight:600;">ink-soft · Метаданные</div>
+          <div style="font-size:13px; color:#8A7B6C;">Строка «2 человека · 14 покупок», сноски.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#A2917F; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#A2917F</div>
+          <div style="font-size:14px; font-weight:600;">ink-faint · Оверлайны, иконки, disabled-текст</div>
+          <div style="font-size:13px; color:#8A7B6C;">Uppercase-подписи «ЗАВТРАК», знак «−» в степпере.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #C4623F; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#C4623F; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#C4623F</div>
+          <div style="font-size:14px; font-weight:600;">accent · Терракота (единственный акцент)</div>
+          <div style="font-size:13px; color:#8A7B6C;">Сумма бюджета, заполнение слайдера, выбранная опция, суммы дней.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#F6E4DA; border:1px solid #E8C4B2; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#F6E4DA</div>
+          <div style="font-size:14px; font-weight:600;">accent-soft · Подложка выбранного</div>
+          <div style="font-size:13px; color:#8A7B6C;">Активная карточка «Среднее», блок подсказки. Бордер #E8C4B2, текст #8A4A2E.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#DCD1C0; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#DCD1C0</div>
+          <div style="font-size:14px; font-weight:600;">border · Основная граница 1px</div>
+          <div style="font-size:13px; color:#8A7B6C;">Все карточки, поля, разделители панелей.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#E3D8C7; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#E3D8C7</div>
+          <div style="font-size:14px; font-weight:600;">track · Незаполненный трек / тонкий divider</div>
+          <div style="font-size:13px; color:#8A7B6C;">Слайдер, прогресс бюджета, внутренние разделители.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#4F7A52; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#4F7A52</div>
+          <div style="font-size:14px; font-weight:600;">success · «В бюджете»</div>
+          <div style="font-size:13px; color:#8A7B6C;">Только текстовый статус и галочки. Подложка #E7EFE4.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#B3402C; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#B3402C</div>
+          <div style="font-size:14px; font-weight:600;">danger · Превышение бюджета, ошибка поля</div>
+          <div style="font-size:13px; color:#8A7B6C;">Подложка #F7E0DB. Отличается от accent — не путать.</div>
+        </div>
+      </div>
+      <div style="display:flex; gap:16px; align-items:center; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:16px; grid-column:span 2;">
+        <div style="width:56px; height:56px; border-radius:10px; background:#D2C4B0; flex:0 0 auto;"></div>
+        <div style="display:flex; flex-direction:column; gap:3px;">
+          <div style="font-family:'JetBrains Mono',monospace; font-size:14px; color:#241C16;">#D2C4B0 · #EFE7DA · rgba(36,28,22,.5)</div>
+          <div style="font-size:14px; font-weight:600;">Служебные: пунктир-лидер · disabled-фон · тень</div>
+          <div style="font-size:13px; color:#8A7B6C;">Пунктирная линия между названием приёма пищи и ценой; фон неактивной кнопки; цвет тени.</div>
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:20px 24px; display:flex; flex-direction:column; gap:8px;">
+      <div style="font-size:14px; font-weight:600;">Правила использования</div>
+      <div style="font-size:14px; line-height:1.6; color:#6B5B4A;">Акцент #C4623F — только для денег и выбора. Никогда не для декора и не для больших плоскостей (максимум ~5% площади экрана). Зелёный (#4F7A52) применяется исключительно как статус «в бюджете» — не как тематический цвет еды. Тёмный #241C16 — единственный «тяжёлый» фон, только у primary-кнопки.</div>
+    </div>
+  </div>
+
+  <!-- 2. Типографика -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">02</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Типографика</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:22px 24px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-family:'Newsreader',serif; font-size:40px; line-height:1; color:#241C16;">Newsreader</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#6B5B4A;">font-family: 'Newsreader', Georgia, serif;<br>weights: 300, 400, 500</div>
+        <div style="font-size:14px; line-height:1.55; color:#6B5B4A;">Дисплейная антиква. Заголовки, названия дней и все денежные суммы. Никогда — для UI-подписей и таблиц.</div>
+      </div>
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:22px 24px; display:flex; flex-direction:column; gap:10px;">
+        <div style="font-size:40px; line-height:1; font-weight:600; color:#241C16;">Karla</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#6B5B4A;">font-family: 'Karla', system-ui, sans-serif;<br>weights: 400, 500, 600</div>
+        <div style="font-size:14px; line-height:1.55; color:#6B5B4A;">Интерфейсный гротеск. Лейблы, кнопки, ингредиенты, метаданные, оверлайны.</div>
+      </div>
+    </div>
+
+    <div style="display:flex; flex-direction:column; border:1px solid #DCD1C0; border-radius:14px; overflow:hidden;">
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:14px 22px; background:#EFE7DA; font-size:12px; letter-spacing:.14em; text-transform:uppercase; color:#8A7B6C;">
+        <div>Роль / токен</div><div>Параметры</div><div>Где применяется</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-family:'Newsreader',serif; font-size:22px;">display-xl</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Newsreader 400 · 66px/1.03 · −0.01em<br>mobile: 36px/1.08</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Заголовок лендинга/формы</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-family:'Newsreader',serif; font-size:22px;">money-hero</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Newsreader 400 · 62px/0.95<br>mobile: 44px/1</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Итоговая сумма плана</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-family:'Newsreader',serif; font-size:22px;">money-lg</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Newsreader 400 · 42px/1 · #C4623F<br>mobile: 32px</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Значение бюджета в форме</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-family:'Newsreader',serif; font-size:22px;">heading-day</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Newsreader 400 · 26px/1.2 (desktop)<br>развёрнутый 20px, свёрнутый 22px/19px</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">«Понедельник», «День 1»</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-family:'Newsreader',serif; font-size:22px;">heading-dish</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Newsreader 400 · 20px/1.25 (desktop)<br>mobile: Karla 400 · 16px/1.35</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Название блюда</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:17px; font-weight:600;">body-lg</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 19px/1.6 · #6B5B4A</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Подзаголовок-описание</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:17px; font-weight:600;">body</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 15px/1.5 · #241C16</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Опции, кнопки, основной UI</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:17px; font-weight:600;">body-sm</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 13px/1.45 · #6B5B4A</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Строки ингредиентов, цены позиций</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:17px; font-weight:600;">label</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 14px/1.4 · #6B5B4A</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Лейблы полей формы</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:11px; letter-spacing:.16em; text-transform:uppercase; font-weight:600; color:#A2917F;">overline</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 11px · uppercase<br>letter-spacing 0.14–0.18em · #A2917F</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">«ЗАВТРАК», «ИТОГО ЗА 5 ДНЕЙ»</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1.5fr 1.9fr 1.6fr; gap:16px; padding:16px 22px; background:#FBF7F0; border-top:1px solid #E3D8C7; align-items:baseline;">
+        <div style="font-size:17px; font-weight:600;">caption</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#6B5B4A; line-height:1.6;">Karla 400 · 12px/1.4 · #8A7B6C</div>
+        <div style="font-size:13.5px; color:#6B5B4A;">Границы слайдера, сноски под кнопкой</div>
+      </div>
+    </div>
+
+    <div style="background:#F6E4DA; border:1px solid #E8C4B2; border-radius:14px; padding:20px 24px; font-size:14px; line-height:1.6; color:#8A4A2E;">Числа: `font-variant-numeric: tabular-nums` для всех цен и сумм — иначе колонки цен «пляшут». Формат денег: неразрывный пробел как разделитель тысяч, символ ₽ после числа через обычный пробел («5 840 ₽»). Минимальный размер текста в интерфейсе — 12px, для кликабельного — 13px.</div>
+  </div>
+
+  <!-- 3. Сетка и отступы -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">03</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Отступы, радиусы, тени</div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:22px 24px; display:flex; flex-direction:column; gap:12px;">
+        <div style="font-size:15px; font-weight:600;">Шкала отступов (база 4px)</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.9; color:#6B5B4A;">4 · 6 · 8 · 10 · 12 · 14 · 16 · 20 · 22 · 26 · 30 · 36 · 40 · 48 · 56 · 64</div>
+        <div style="font-size:13.5px; line-height:1.6; color:#6B5B4A;">Соответствует Tailwind 1–16 (кроме 22/26/30 — добавить в theme.extend.spacing как 5.5 / 6.5 / 7.5).</div>
+        <div style="display:flex; flex-direction:column; gap:6px; font-size:13.5px; color:#6B5B4A; padding-top:4px; border-top:1px solid #E3D8C7;">
+          <div style="display:flex; justify-content:space-between; padding-top:8px;"><div>Между группами формы</div><div style="color:#241C16;">26px</div></div>
+          <div style="display:flex; justify-content:space-between;"><div>Лейбл → контрол</div><div style="color:#241C16;">8–9px</div></div>
+          <div style="display:flex; justify-content:space-between;"><div>Между карточками дней</div><div style="color:#241C16;">10–14px</div></div>
+          <div style="display:flex; justify-content:space-between;"><div>Внутренний паддинг карточки</div><div style="color:#241C16;">16–18px моб. / 26–30px деск.</div></div>
+          <div style="display:flex; justify-content:space-between;"><div>Поля экрана</div><div style="color:#241C16;">20–22px моб. / 48px деск.</div></div>
+          <div style="display:flex; justify-content:space-between;"><div>Строки ингредиентов</div><div style="color:#241C16;">3–4px</div></div>
+        </div>
+      </div>
+
+      <div style="display:flex; flex-direction:column; gap:14px;">
+        <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:22px 24px; display:flex; flex-direction:column; gap:12px;">
+          <div style="font-size:15px; font-weight:600;">Радиусы</div>
+          <div style="display:flex; flex-direction:column; gap:8px; font-size:13.5px; color:#6B5B4A;">
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:8px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">8px</div><div>значки, мелкие плашки</div></div>
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:14px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">14px</div><div>поля ввода, опции, вторичные кнопки</div></div>
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:16px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">16px</div><div>primary-кнопка</div></div>
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:18px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">18–20px</div><div>карточки дней, панели</div></div>
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:24px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">24–26px</div><div>панель формы, экран моб.</div></div>
+            <div style="display:flex; align-items:center; gap:12px;"><div style="width:34px; height:26px; border-radius:99px; background:#F3EDE4; border:1px solid #DCD1C0;"></div><div style="font-family:'JetBrains Mono',monospace;">999px</div><div>треки, ручка слайдера, точки-радио</div></div>
+          </div>
+        </div>
+        <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:22px 24px; display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:15px; font-weight:600;">Тени и границы</div>
+          <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.8; color:#6B5B4A;">
+            shadow-card: 0 18px 40px -28px rgba(36,28,22,.5)<br>
+            shadow-hover: 0 14px 28px -20px rgba(36,28,22,.42)<br>
+            shadow-sticky: 0 -8px 20px -18px rgba(36,28,22,.4)<br>
+            border: 1px solid #DCD1C0<br>
+            divider: 1px solid #E3D8C7
+          </div>
+          <div style="font-size:13.5px; line-height:1.6; color:#6B5B4A;">Тени мягкие и почти невидимые — иерархия строится границами, а не глубиной. Никаких теней внутри карточек.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Компоненты -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">04</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Компоненты и состояния</div>
+    </div>
+
+    <!-- Button primary -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">Button / Primary</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">&lt;Button variant="primary"&gt;</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+        <div style="background:#241C16; color:#F3EDE4; border-radius:16px; padding:17px 34px; font-size:16px; font-weight:600;">Составить план</div>
+        <div style="background:#3A2E24; color:#F3EDE4; border-radius:16px; padding:17px 34px; font-size:16px; font-weight:600; box-shadow:0 14px 28px -20px rgba(36,28,22,.42);">Hover</div>
+        <div style="background:#1A1410; color:#F3EDE4; border-radius:16px; padding:17px 34px; font-size:16px; font-weight:600; transform:scale(.985);">Active</div>
+        <div style="background:#241C16; color:#F3EDE4; border-radius:16px; padding:17px 34px; font-size:16px; font-weight:600; outline:2px solid #C4623F; outline-offset:3px;">Focus</div>
+        <div style="background:#EFE7DA; color:#A2917F; border:1px solid #DCD1C0; border-radius:16px; padding:16px 34px; font-size:16px; font-weight:600;">Disabled</div>
+        <div style="background:#241C16; color:#F3EDE4; border-radius:16px; padding:17px 30px; font-size:16px; font-weight:600; display:flex; align-items:center; gap:10px;"><div style="width:14px; height:14px; border:2px solid rgba(243,237,228,.35); border-top-color:#F3EDE4; border-radius:99px;"></div>Собираю план…</div>
+      </div>
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:8px 20px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div style="color:#241C16; font-weight:600;">Default</div><div>bg #241C16 · text #F3EDE4 · radius 16 · padding 17/34 (моб. — full width, height 56) · font 16/600 · transition 160ms ease-out</div>
+        <div style="color:#241C16; font-weight:600;">Hover</div><div>bg #3A2E24 · shadow-hover · translateY(−1px)</div>
+        <div style="color:#241C16; font-weight:600;">Active</div><div>bg #1A1410 · scale(0.985) · без тени</div>
+        <div style="color:#241C16; font-weight:600;">Focus-visible</div><div>outline 2px #C4623F, offset 3px (не убирать при клике мышью — только :focus-visible)</div>
+        <div style="color:#241C16; font-weight:600;">Disabled</div><div>bg #EFE7DA · border #DCD1C0 · text #A2917F · cursor not-allowed · без hover</div>
+        <div style="color:#241C16; font-weight:600;">Loading</div><div>текст меняется на «Собираю план…», спиннер 14px, кнопка не кликается, ширина не прыгает (min-width фиксируется)</div>
+      </div>
+    </div>
+
+    <!-- Button secondary -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">Button / Secondary</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">&lt;Button variant="ghost"&gt; — «Пересобрать»</div>
+      </div>
+      <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
+        <div style="border:1px solid #241C16; color:#241C16; border-radius:14px; padding:15px 30px; font-size:15px;">Пересобрать</div>
+        <div style="border:1px solid #241C16; background:#EFE7DA; color:#241C16; border-radius:14px; padding:15px 30px; font-size:15px;">Hover</div>
+        <div style="border:1px solid #241C16; background:#E3D8C7; color:#241C16; border-radius:14px; padding:15px 30px; font-size:15px;">Active</div>
+        <div style="border:1px solid #DCD1C0; color:#A2917F; border-radius:14px; padding:15px 30px; font-size:15px;">Disabled</div>
+      </div>
+      <div style="font-size:13.5px; color:#6B5B4A; line-height:1.6;">Default: прозрачный фон, border 1px #241C16, text #241C16 · Hover: фон #EFE7DA · Active: фон #E3D8C7 · Focus: тот же outline #C4623F · Disabled: border и текст #DCD1C0 / #A2917F.</div>
+    </div>
+
+    <!-- Slider -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">BudgetSlider</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">input[type=range] + числовой ввод</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:12px; max-width:520px;">
+        <div style="display:flex; justify-content:space-between; align-items:baseline;">
+          <div style="font-size:14px; color:#6B5B4A;">Бюджет</div>
+          <div style="font-family:'Newsreader',serif; font-size:42px; line-height:1; color:#C4623F;">6 000 ₽</div>
+        </div>
+        <div style="position:relative; height:8px; background:#E3D8C7; border-radius:99px;">
+          <div style="position:absolute; inset:0 42% 0 0; background:#C4623F; border-radius:99px;"></div>
+          <div style="position:absolute; left:58%; top:-8px; width:24px; height:24px; margin-left:-12px; background:#FBF7F0; border:2px solid #C4623F; border-radius:99px;"></div>
+        </div>
+        <div style="display:flex; justify-content:space-between; font-size:12px; color:#A2917F;"><div>2 000 ₽</div><div>15 000 ₽</div></div>
+      </div>
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:8px 20px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div style="color:#241C16; font-weight:600;">Геометрия</div><div>трек h8 #E3D8C7 · заполнение #C4623F · ручка 24×24, фон #FBF7F0, border 2px #C4623F. Хит-зона ручки — 44×44 (псевдоэлемент).</div>
+        <div style="color:#241C16; font-weight:600;">Hover</div><div>ручка 26×26, тень 0 0 0 6px rgba(196,98,63,.12) · cursor grab</div>
+        <div style="color:#241C16; font-weight:600;">Active / drag</div><div>ручка border 3px, cursor grabbing, значение обновляется мгновенно (без debounce на UI, debounce 300ms — только на запрос к API)</div>
+        <div style="color:#241C16; font-weight:600;">Focus</div><div>кольцо 0 0 0 3px rgba(196,98,63,.35); стрелки ← → шаг 100 ₽, Shift+стрелки — 500 ₽</div>
+        <div style="color:#241C16; font-weight:600;">Disabled</div><div>заполнение и ручка #D2C4B0, значение #A2917F</div>
+        <div style="color:#241C16; font-weight:600;">Диапазон</div><div>2 000 – 15 000 ₽, шаг 100. Значение — также редактируемое числовое поле по клику на сумму.</div>
+      </div>
+    </div>
+
+    <!-- Stepper -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">NumberStepper</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">дней (1–14) · человек (1–8)</div>
+      </div>
+      <div style="display:flex; gap:14px; flex-wrap:wrap;">
+        <div style="width:220px; display:flex; align-items:center; justify-content:space-between; background:#F3EDE4; border:1px solid #DCD1C0; border-radius:14px; padding:12px 18px;">
+          <div style="font-size:20px; color:#A2917F;">−</div><div style="font-family:'Newsreader',serif; font-size:30px;">5</div><div style="font-size:20px; color:#241C16;">+</div>
+        </div>
+        <div style="width:220px; display:flex; align-items:center; justify-content:space-between; background:#F3EDE4; border:1px solid #241C16; border-radius:14px; padding:12px 18px;">
+          <div style="font-size:20px; color:#D2C4B0;">−</div><div style="font-family:'Newsreader',serif; font-size:30px;">1</div><div style="font-size:20px; color:#241C16;">+</div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:8px 20px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div style="color:#241C16; font-weight:600;">Default</div><div>контейнер bg #F3EDE4, border 1px #DCD1C0, radius 14, высота 52 (моб. 56). Значение — Newsreader 26–30px.</div>
+        <div style="color:#241C16; font-weight:600;">Кнопки ±</div><div>зона 44×44, символ 20px. Активная «+» — #241C16; «−» в покое #A2917F.</div>
+        <div style="color:#241C16; font-weight:600;">Hover кнопки</div><div>круглая подложка #EFE7DA под символом (36×36, radius 99)</div>
+        <div style="color:#241C16; font-weight:600;">Active</div><div>подложка #E3D8C7 · значение анимируется 120ms (fade/slide 4px)</div>
+        <div style="color:#241C16; font-weight:600;">Focus</div><div>outline 2px #C4623F на контейнере при фокусе на поле; ↑/↓ меняют значение</div>
+        <div style="color:#241C16; font-weight:600;">Предел</div><div>кнопка на границе диапазона: #D2C4B0, aria-disabled, без hover. Само поле не блокируется.</div>
+      </div>
+    </div>
+
+    <!-- Variety option -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">VarietyOption (radio-group)</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">role="radiogroup" · 3 значения</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:8px; max-width:520px;">
+        <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border:1px solid #DCD1C0; border-radius:14px; background:#F3EDE4;">
+          <div style="width:9px; height:9px; border-radius:99px; background:#DCD1C0;"></div><div style="font-size:15px; color:#6B5B4A;">Default — одно и то же каждый день</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border:1px solid #DCD1C0; border-radius:14px; background:#EFE7DA;">
+          <div style="width:9px; height:9px; border-radius:99px; background:#A2917F;"></div><div style="font-size:15px; color:#241C16;">Hover</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border:1px solid #C4623F; border-radius:14px; background:#F6E4DA;">
+          <div style="width:9px; height:9px; border-radius:99px; background:#C4623F;"></div><div style="font-size:15px; color:#241C16; font-weight:600;">Selected — среднее</div><div style="margin-left:auto; font-size:12px; color:#C4623F;">дешевле</div>
+        </div>
+        <div style="display:flex; align-items:center; gap:12px; padding:15px 16px; border:1px solid #C4623F; border-radius:14px; background:#F6E4DA; outline:2px solid #C4623F; outline-offset:3px;">
+          <div style="width:9px; height:9px; border-radius:99px; background:#C4623F;"></div><div style="font-size:15px; color:#241C16; font-weight:600;">Focus-visible</div>
+        </div>
+      </div>
+      <div style="font-size:13.5px; color:#6B5B4A; line-height:1.6;">Default: bg #F3EDE4 / border #DCD1C0 / точка #DCD1C0 / текст #6B5B4A · Hover: bg #EFE7DA, точка #A2917F · Selected: bg #F6E4DA, border #C4623F, точка #C4623F, текст #241C16 600 · Active: bg #F0D8CB · Disabled: opacity .5, cursor not-allowed. Переключение стрелками ↑↓ внутри группы, Tab выходит из группы. Высота строки ≥ 52px (моб. 56).</div>
+    </div>
+
+    <!-- Day card -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">DayCard (accordion)</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">заголовок — &lt;button aria-expanded&gt;</div>
+      </div>
+      <div style="display:flex; flex-direction:column; gap:10px;">
+        <div style="background:#F3EDE4; border:1px solid #DCD1C0; border-radius:18px; padding:16px 18px; display:flex; justify-content:space-between; align-items:center;">
+          <div style="font-family:'Newsreader',serif; font-size:20px;">Свёрнутый · Вторник</div>
+          <div style="display:flex; gap:14px; align-items:center;"><div style="font-size:14px; color:#6B5B4A;">1 150 ₽</div><div style="color:#A2917F;">＋</div></div>
+        </div>
+        <div style="background:#F3EDE4; border:1px solid #C4623F; border-radius:18px; padding:16px 18px; display:flex; flex-direction:column; gap:12px;">
+          <div style="display:flex; justify-content:space-between; align-items:baseline; border-bottom:1px solid #E3D8C7; padding-bottom:10px;">
+            <div style="font-family:'Newsreader',serif; font-size:20px;">Развёрнутый · Понедельник</div>
+            <div style="font-size:14px; color:#C4623F; font-weight:600;">1 190 ₽</div>
+          </div>
+          <div style="display:flex; flex-direction:column; gap:5px;">
+            <div style="display:flex; justify-content:space-between; align-items:baseline; gap:10px;">
+              <div style="font-size:11px; letter-spacing:.14em; text-transform:uppercase; color:#A2917F;">Завтрак</div>
+              <div style="flex:1; border-bottom:1px dotted #D2C4B0; transform:translateY(-3px);"></div>
+              <div style="font-size:13px; color:#6B5B4A;">210 ₽</div>
+            </div>
+            <div style="font-size:16px;">Овсянка с яблоком и корицей</div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:#6B5B4A;"><div>Овсяные хлопья, 200 г</div><div>34 ₽</div></div>
+            <div style="display:flex; justify-content:space-between; font-size:13px; color:#6B5B4A;"><div>Молоко, 400 мл</div><div>48 ₽</div></div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:8px 20px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div style="color:#241C16; font-weight:600;">Collapsed</div><div>bg #FBF7F0 · border #DCD1C0 · radius 18 · padding 16/18 (деск. 20/30) · сумма дня #6B5B4A · иконка ＋ #A2917F. На десктопе дополнительно строка-превью блюд (13–14px #8A7B6C), на мобильном её нет.</div>
+        <div style="color:#241C16; font-weight:600;">Hover</div><div>border #C4A98C, фон без изменений, иконка #241C16, cursor pointer</div>
+        <div style="color:#241C16; font-weight:600;">Expanded</div><div>border #C4623F, сумма дня #C4623F 600, иконка → −, разделитель под заголовком #E3D8C7. Раскрытие: height auto 220ms ease-out + opacity контента 140ms.</div>
+        <div style="color:#241C16; font-weight:600;">Focus</div><div>outline 2px #C4623F offset 2px на заголовке-кнопке; Enter/Space переключают</div>
+        <div style="color:#241C16; font-weight:600;">Loading (skeleton)</div><div>полосы #E3D8C7, radius 6, shimmer 1.2s. Высота карточки-скелета = 92px.</div>
+        <div style="color:#241C16; font-weight:600;">Приём пищи</div><div>overline #A2917F + пунктирный лидер #D2C4B0 + цена. Ингредиенты — строки space-between, gap 3–4px. Действие «заменить блюдо» появляется на hover блюда справа (текст 13px #C4623F).</div>
+      </div>
+    </div>
+
+    <!-- Total panel -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:18px;">
+      <div style="display:flex; align-items:baseline; gap:12px;">
+        <div style="font-family:'Newsreader',serif; font-size:24px;">TotalPanel</div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; color:#A2917F;">sticky sidebar (деск.) / sticky top (моб.)</div>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+        <div style="background:#F3EDE4; border:1px solid #DCD1C0; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#A2917F;">В бюджете</div>
+          <div style="font-family:'Newsreader',serif; font-size:44px; line-height:1;">5 840 ₽</div>
+          <div style="position:relative; height:8px; background:#E3D8C7; border-radius:99px;"><div style="position:absolute; inset:0 3% 0 0; background:#C4623F; border-radius:99px;"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px;"><div style="color:#8A7B6C;">бюджет 6 000 ₽</div><div style="color:#4F7A52; font-weight:600;">осталось 160 ₽</div></div>
+        </div>
+        <div style="background:#F3EDE4; border:1px solid #E8BDB2; border-radius:16px; padding:20px; display:flex; flex-direction:column; gap:10px;">
+          <div style="font-size:11px; letter-spacing:.18em; text-transform:uppercase; color:#B3402C;">Превышение</div>
+          <div style="font-family:'Newsreader',serif; font-size:44px; line-height:1; color:#B3402C;">6 240 ₽</div>
+          <div style="position:relative; height:8px; background:#E3D8C7; border-radius:99px;"><div style="position:absolute; inset:0 0 0 0; background:#B3402C; border-radius:99px;"></div></div>
+          <div style="display:flex; justify-content:space-between; font-size:13px;"><div style="color:#8A7B6C;">бюджет 6 000 ₽</div><div style="color:#B3402C; font-weight:600;">+240 ₽ · упростить план</div></div>
+        </div>
+      </div>
+      <div style="font-size:13.5px; color:#6B5B4A; line-height:1.6;">Прогресс-бар: заполнение = min(итог/бюджет, 1). В пределах бюджета — #C4623F, остаток подписан #4F7A52. При превышении — весь бар #B3402C, сумма и подпись #B3402C, рядом кнопка-ссылка «упростить план». Числа анимируются счётчиком 400ms при пересборке. Панель липкая: `sticky top-0` в правой колонке на десктопе, `sticky top-0 z-10` с shadow-sticky при скролле на мобильном.</div>
+    </div>
+
+    <!-- Input -->
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-family:'Newsreader',serif; font-size:24px;">TextField / NumberField</div>
+      <div style="display:grid; grid-template-columns:130px 1fr; gap:8px 20px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div style="color:#241C16; font-weight:600;">Default</div><div>bg #F3EDE4 · border 1px #DCD1C0 · radius 14 · h 52 · padding 0 16 · text #241C16 16px · placeholder #A2917F</div>
+        <div style="color:#241C16; font-weight:600;">Hover</div><div>border #C4A98C</div>
+        <div style="color:#241C16; font-weight:600;">Focus</div><div>border #C4623F + ring 0 0 0 3px rgba(196,98,63,.18), bg #FBF7F0</div>
+        <div style="color:#241C16; font-weight:600;">Filled</div><div>без изменений, значение 600</div>
+        <div style="color:#241C16; font-weight:600;">Error</div><div>border #B3402C, текст ошибки 13px #B3402C под полем (mt 6)</div>
+        <div style="color:#241C16; font-weight:600;">Disabled</div><div>bg #EFE7DA, border #E3D8C7, text #A2917F, cursor not-allowed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5. Layout -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">05</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Layout и адаптив</div>
+    </div>
+
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:14px;">
+      <div style="font-size:16px; font-weight:600;">Брейкпоинты</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; line-height:1.9; color:#6B5B4A;">
+        base &lt; 768px — мобильный, одна колонка<br>
+        md ≥ 768px — планшет: форма в одну колонку по центру (max-w 620), план — дни в 2 колонки приёмов<br>
+        lg ≥ 1024px — десктоп: двухколоночные экраны<br>
+        xl ≥ 1280px — контейнер max-w 1344, поля 48px
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:12px;">
+        <div style="font-size:16px; font-weight:600;">Экран формы</div>
+        <div style="font-size:13.5px; line-height:1.65; color:#6B5B4A;">
+          <b style="color:#241C16;">Десктоп (lg+):</b> `grid grid-cols-[1fr_620px] gap-16 px-12 pt-14` — слева оффер (заголовок 66px, описание, 2 метрики в ряд flex gap-10), справа панель формы. Панель: `bg-surface border rounded-3xl p-9 flex flex-col gap-6`. Внутри — 4 группы: бюджет, [дней | человек] `flex gap-4`, разнообразие `grid grid-cols-3 gap-2.5`, кнопка + сноска `flex items-center gap-4`. Экран не скроллится: суммарная высота ≤ 860.<br><br>
+          <b style="color:#241C16;">Мобильный (base):</b> одна колонка `flex flex-col gap-5 px-5 pt-6 pb-5`, заголовок 36px, разнообразие — вертикальный список строк, кнопка прижата вниз через `mt-auto`, safe-area-inset-bottom учитывается.
+        </div>
+      </div>
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:12px;">
+        <div style="font-size:16px; font-weight:600;">Экран результата</div>
+        <div style="font-size:13.5px; line-height:1.65; color:#6B5B4A;">
+          <b style="color:#241C16;">Десктоп (lg+):</b> шапка-бар (лого, параметры плана, «Список покупок») + `grid grid-cols-[1fr_380px] gap-10 px-12 py-9 items-start`. Левая колонка — стек карточек дней `flex flex-col gap-3.5`; развёрнутый день раскладывает приёмы пищи в `grid grid-cols-3 gap-7`. Правая — `sticky top-6` с TotalPanel, метриками и подсказкой.<br><br>
+          <b style="color:#241C16;">Мобильный (base):</b> TotalPanel закреплён сверху (`sticky top-0`), список дней скроллится, действия — в нижней панели `sticky bottom-0` с `flex gap-2.5` (пропорции 1 : 1.4). Приёмы пищи — вертикальный стек, gap 14.
+        </div>
+      </div>
+    </div>
+
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:12px;">
+      <div style="font-size:16px; font-weight:600;">Правила выравнивания</div>
+      <div style="display:flex; flex-direction:column; gap:7px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div>· Любая пара «название — цена» строится как `flex justify-between items-baseline`, цена прижата вправо, tabular-nums.</div>
+        <div>· Группы кнопок и полей — только flex/grid + gap, никаких margin между соседями.</div>
+        <div>· Все интерактивные зоны на мобильном ≥ 44×44px.</div>
+        <div>· Максимальная ширина абзаца текста — 62ch.</div>
+        <div>· Один экран = один акцентный элемент максимальной яркости (сумма). Остальное — нейтральное.</div>
+      </div>
+    </div>
+
+    <div style="background:#241C16; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:12px;">
+      <div style="font-size:13px; letter-spacing:.16em; text-transform:uppercase; color:#A2917F;">tailwind.config — theme.extend</div>
+      <div style="font-family:'JetBrains Mono',monospace; font-size:12.5px; line-height:1.85; color:#E3D8C7; white-space:pre-wrap;">colors: {
+  base:'#F3EDE4', surface:'#FBF7F0', ink:'#241C16',
+  'ink-muted':'#6B5B4A', 'ink-soft':'#8A7B6C', 'ink-faint':'#A2917F',
+  accent:'#C4623F', 'accent-soft':'#F6E4DA', 'accent-line':'#E8C4B2',
+  line:'#DCD1C0', track:'#E3D8C7', success:'#4F7A52', danger:'#B3402C',
+},
+fontFamily: { display:['Newsreader','Georgia','serif'], sans:['Karla','system-ui','sans-serif'] },
+borderRadius: { xl:'14px','2xl':'18px','3xl':'24px' },
+boxShadow: { card:'0 18px 40px -28px rgba(36,28,22,.5)', hover:'0 14px 28px -20px rgba(36,28,22,.42)' },
+spacing: { '5.5':'22px','6.5':'26px','7.5':'30px' },</div>
+    </div>
+  </div>
+
+  <!-- 5b. Логотип -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">06</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Логотип</div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:14px;">
+      <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; align-items:center; gap:24px;">
+        <img src="logo.svg" alt="Логотип Кастрюля" width="96" height="96" style="display:block; border-radius:24px; flex:0 0 auto;">
+        <div style="display:flex; flex-direction:column; gap:8px;">
+          <div style="display:flex; align-items:center; gap:10px;"><img src="logo.svg" alt="" width="32" height="32" style="display:block; border-radius:8px;"><div style="font-family:'Newsreader',serif; font-size:22px;">Кастрюля</div></div>
+          <div style="display:flex; align-items:center; gap:10px;"><img src="logo.svg" alt="" width="16" height="16" style="display:block; border-radius:4px;"><div style="font-size:13px; color:#8A7B6C;">16px — favicon, читается</div></div>
+        </div>
+      </div>
+      <div style="background:#241C16; border:1px solid #241C16; border-radius:18px; padding:26px 28px; display:flex; align-items:center; gap:24px;">
+        <img src="logo.svg" alt="" width="96" height="96" style="display:block; border-radius:24px; flex:0 0 auto;">
+        <div style="font-size:13.5px; line-height:1.6; color:#E3D8C7;">На тёмном фоне знак используется без изменений — терракотовая плашка сама создаёт контраст. Инверсия и обводка не нужны.</div>
+      </div>
+    </div>
+    <div style="background:#FBF7F0; border:1px solid #DCD1C0; border-radius:18px; padding:26px 28px; display:flex; flex-direction:column; gap:12px;">
+      <div style="font-size:16px; font-weight:600;">Правила</div>
+      <div style="display:flex; flex-direction:column; gap:7px; font-size:13.5px; color:#6B5B4A; line-height:1.5;">
+        <div>· Файл: <span style="font-family:'JetBrains Mono',monospace;">logo.svg</span>, viewBox 0 0 64 64, плашка #C4623F (radius 16 при 64px = 25%), знак #F3EDE4.</div>
+        <div>· Размеры в интерфейсе: 24px (моб. шапка) · 28–30px (десктоп-шапка) · 48px (документы) · 16/32/180px для favicon и apple-touch-icon.</div>
+        <div>· Радиус скругления плашки масштабируется пропорционально (25% от размера); при 16px допустимо 4px.</div>
+        <div>· Минимальное защитное поле вокруг знака — 25% его размера. Логотип не растягивать, цвета плашки не менять, тени не добавлять.</div>
+        <div>· Словесная часть «Кастрюля» — Newsreader 400, идёт справа от знака с отступом 10–12px, выравнивание по оптическому центру.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7. Чек-лист -->
+  <div style="display:flex; flex-direction:column; gap:24px;">
+    <div style="display:flex; align-items:baseline; gap:14px;">
+      <div style="font-family:'JetBrains Mono',monospace; font-size:13px; color:#C4623F;">07</div>
+      <div style="font-family:'Newsreader',serif; font-size:34px; color:#241C16;">Чек-лист вёрстки</div>
+    </div>
+    <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Подключены Newsreader (300/400/500) и Karla (400/500/600), задан font-display: swap</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Токены цветов вынесены в tailwind.config, хардкод hex в JSX отсутствует</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Все суммы — tabular-nums, разделитель тысяч — неразрывный пробел</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>У каждого интерактивного элемента реализованы hover / active / focus-visible / disabled</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Focus-ring #C4623F виден при навигации с клавиатуры, порядок Tab логичен</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Аккордеон дня: button + aria-expanded + aria-controls, работает Enter/Space</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Итоговая сумма видна без скролла на обоих брейкпоинтах</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Реализованы состояния экрана: loading (скелетоны дней), empty, error, превышение бюджета</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Хит-зоны на мобильном ≥ 44px, учтён safe-area-inset-bottom</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Анимации ≤ 220ms, все выключаются при prefers-reduced-motion</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Контраст текста ≥ 4.5:1 (проверить #8A7B6C на #F3EDE4 — только для 12px+ метаданных)</div>
+      <div style="display:flex; gap:12px; background:#FBF7F0; border:1px solid #DCD1C0; border-radius:14px; padding:15px 18px; font-size:14px; line-height:1.5; color:#241C16;"><div style="width:16px; height:16px; border:1px solid #A2917F; border-radius:4px; flex:0 0 auto; margin-top:2px;"></div>Длинные названия блюд и ингредиентов не ломают верстку (text-wrap: pretty, min-w-0)</div>
+    </div>
+  </div>
+
+</div>
+</div>
+
+</x-dc>
+</body>
+</html>
