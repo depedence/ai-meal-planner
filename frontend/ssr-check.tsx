@@ -1,13 +1,15 @@
 import { renderToString } from 'react-dom/server'
-import type { MealPlanRequest, MealPlanResponse } from './src/api/mealPlan'
+import type { Meal, MealPlanRequest, MealPlanResponse } from './src/api/mealPlan'
 import { parseMealPlan } from './src/api/mealPlan'
 import { FormScreen } from './src/components/FormScreen'
 import { ResultScreen } from './src/components/ResultScreen'
+import { ShoppingList } from './src/components/ShoppingList'
 import { formatMoney } from './src/lib/format'
 import type { PlanEntry } from './src/lib/history'
 import { loadHistory } from './src/lib/history'
 import { clampRequest, DAYS_MAX, PEOPLE_MAX } from './src/lib/limits'
 import { groupMealsByDay } from './src/lib/meals'
+import { buildShoppingList } from './src/lib/shoppingList'
 
 const params: MealPlanRequest = { budget: 2000, days: 2, peopleCount: 2, varietyLevel: 'MIXED' }
 /* Плоский массив, дни намеренно вперемешку — проверяем группировку на фронте */
@@ -23,6 +25,28 @@ const plan: MealPlanResponse = {
 }
 const entry = (id: string, p = params, pl = plan): PlanEntry =>
   ({ id, createdAt: 1, params: p, plan: pl })
+
+/* Список покупок: разный регистр и пробелы в одном названии, повтор количества,
+   безымянный ингредиент и пустое количество — всё это приходит от LLM. */
+const shoppingMeals: Meal[] = [
+  { dayNumber: 1, type: 'breakfast', dishName: 'Каша', estimatedPrice: 100,
+    ingredients: [
+      { name: 'Молоко', amount: '200 мл', estimatedPrice: 30 },
+      { name: 'Соль', amount: 'по вкусу', estimatedPrice: 1 },
+    ] },
+  { dayNumber: 1, type: 'lunch', dishName: 'Суп', estimatedPrice: 100,
+    ingredients: [
+      { name: '  молоко ', amount: '150 мл', estimatedPrice: 20 },
+      { name: 'Соль', amount: 'По вкусу', estimatedPrice: 1 },
+      { name: '', amount: '1 шт', estimatedPrice: 5 },
+    ] },
+  { dayNumber: 2, type: 'dinner', dishName: 'Блины', estimatedPrice: 100,
+    ingredients: [
+      { name: 'Молоко', amount: '200 мл', estimatedPrice: 30 },
+      { name: 'Яйцо', amount: '', estimatedPrice: 12 },
+    ] },
+]
+const shoppingItems = buildShoppingList(shoppingMeals)
 
 const noop = () => {}
 const form = (over: Partial<Parameters<typeof FormScreen>[0]> = {}) =>
@@ -43,6 +67,8 @@ const cases: [string, string][] = [
   ['result/over', result({ entry: entry('c', { ...params, budget: 500 }) })],
   ['result/loading', result({ loading: true })],
   ['result/error', result({ error: 'Сервис недоступен' })],
+  ['shopping', renderToString(<ShoppingList items={shoppingItems} />)],
+  ['shopping/empty', renderToString(<ShoppingList items={[]} />)],
 ]
 
 const expect: Record<string, string[]> = {
@@ -56,18 +82,27 @@ const expect: Record<string, string[]> = {
   'result': ['Потрачено', '820 ₽', 'осталось 1 180 ₽', 'День 1', 'День 2',
     'Овсянка с яблоком', 'Куриный суп', 'Гречка с овощами', '588 ₽',
     'aria-expanded="true"', 'aria-expanded="false"', 'Завтрак', '232 ₽',
-    'grid-template-rows:1fr', 'grid-template-rows:0fr', '<svg', 'rotate-180'],
+    'grid-template-rows:1fr', 'grid-template-rows:0fr', '<svg', 'rotate-180',
+    'role="tablist"', 'role="tab"', 'По дням', 'Список покупок',
+    'aria-selected="true"', 'aria-selected="false"', 'role="tabpanel"',
+    'Экспорт плана', 'Экспорт списка покупок', 'План питания', '820 ₽ из 2 000 ₽'],
   'result/nav-middle': ['Вариант 2 из 3', 'Предыдущий вариант', 'Следующий вариант'],
   'result/nav-first': ['Вариант 1 из 3', 'cursor-not-allowed'],
   'result/over': ['Потрачено', 'превышение на 320 ₽', 'text-danger'],
   'result/loading': ['shimmer', 'Собираю…', 'Считаем план'],
   'result/error': ['Сервис недоступен', 'role="alert"'],
+  'shopping': ['Список покупок', '3 позиции', 'Молоко', '200 мл, 150 мл',
+    '(3 раза)', 'Соль', 'по вкусу', '(2 раза)', 'Яйцо', '(1 раз)', '80 ₽'],
+  'shopping/empty': ['0 позиций', 'В этом плане не указаны ингредиенты.'],
 }
 
 const forbidden: Record<string, string[]> = {
   'form/history': ['грамм', 'aria-expanded="true"'],
-  'result': ['В бюджете', '＋'],
+  /* Вкладка «по дням» не должна тащить с собой разметку списка покупок */
+  'result': ['В бюджете', '＋', 'позици', '(1 раз)'],
   'result/over': ['В бюджете'],
+  /* Количества перечисляются, а не складываются */
+  'shopping': ['350 мл', 'по вкусу, по вкусу'],
 }
 
 const normalize = (h: string) => h.replace(/<!-- -->/g, '').replace(/\u00A0/g, ' ')
@@ -118,6 +153,19 @@ const checks: [string, boolean][] = [
     groupMealsByDay(plan.meals)[0].meals.map((m) => m.type).join() === 'breakfast,lunch'],
   ['group/skips-dayless',
     groupMealsByDay([{ ...plan.meals[0], dayNumber: Number.NaN }]).length === 0],
+
+  ['shopping/sorted', shoppingItems.map((i) => i.name).join() === 'Молоко,Соль,Яйцо'],
+  ['shopping/groups-ignoring-case', shoppingItems[0].count === 3],
+  ['shopping/keeps-first-spelling', shoppingItems[0].name === 'Молоко'],
+  ['shopping/lists-amounts', shoppingItems[0].amounts.join(', ') === '200 мл, 150 мл'],
+  ['shopping/dedupes-amount-case', shoppingItems[1].amounts.join() === 'по вкусу'],
+  ['shopping/sums-price', shoppingItems[0].totalPrice === 80],
+  ['shopping/skips-nameless', shoppingItems.length === 3],
+  ['shopping/keeps-empty-amount', shoppingItems[2].amounts.length === 0],
+  ['shopping/no-meals', buildShoppingList(undefined).length === 0],
+  ['shopping/survives-garbage', buildShoppingList(
+    [null, { ingredients: null }, { ingredients: [{ name: 5 }, {}] }] as unknown as Meal[],
+  ).length === 0],
 
   ['money/finite', formatMoney(1234) === '1\u00A0234\u00A0₽'],
   ['money/nan', formatMoney(Number.NaN) === '0\u00A0₽'],

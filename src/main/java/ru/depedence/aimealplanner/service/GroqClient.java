@@ -27,7 +27,7 @@ public class GroqClient {
         GroqChatRequest request = new GroqChatRequest(
             groqProperties.model(),
             List.of(new GroqMessage("user", prompt)),
-            0.7,
+            1.0,
             groqProperties.maxCompletionTokens(),
             "low"
         );

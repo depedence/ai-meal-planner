@@ -26,6 +26,16 @@ public class PromptBuilder {
 
         Write all dish names and ingredient names in Russian.
 
+        Draw on a wide range of world cuisines and cooking styles rather than
+        defaulting to the most common budget dishes. Avoid repeating the same
+        few "safe" dishes — be creative and varied within what's realistic
+        to cook at home.
+
+        If the budget leaves significant room beyond a minimal meal cost, use
+        that room: choose more interesting ingredients, better cuts of meat,
+        more varied cuisines — don't artificially minimize spending. Aim to
+        use close to the full budget while staying within it.
+
         Respond with a single valid JSON object only — no markdown, no comments, no extra text.
         Use this exact shape: a "totalEstimatedPrice" number and a flat "meals" array,
         where every meal entry includes its own "dayNumber":
