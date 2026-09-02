@@ -4,6 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import ru.depedence.aimealplanner.dto.request.MealPlanRequest;
+import ru.depedence.aimealplanner.dto.response.Ingredient;
+import ru.depedence.aimealplanner.dto.response.Meal;
 import ru.depedence.aimealplanner.dto.response.MealPlanResponse;
 import ru.depedence.aimealplanner.exception.InvalidPlanResponseException;
 import tools.jackson.core.JacksonException;
@@ -26,8 +28,9 @@ public class MealPlanService {
         log.info("Raw AI response: {}", rawResponse);
         log.info("Cleaned AI response: {}", cleanedResponse);
 
+        MealPlanResponse response;
         try {
-            return objectMapper.readValue(
+            response = objectMapper.readValue(
                 cleanedResponse,
                 MealPlanResponse.class
             );
@@ -38,16 +41,33 @@ public class MealPlanService {
                 e
             );
         }
+
+        recalculatePrices(response);
+
+        return response;
+    }
+
+    private void recalculatePrices(MealPlanResponse response) {
+        int totalPrice = 0;
+        for (Meal meal : response.getMeals()) {
+            int mealPrice = meal
+                .getIngredients()
+                .stream()
+                .mapToInt(Ingredient::getEstimatedPrice)
+                .sum();
+            meal.setEstimatedPrice(mealPrice);
+            totalPrice += mealPrice;
+        }
+
+        response.setTotalEstimatedPrice(totalPrice);
     }
 
     private String stripMarkdownFences(String response) {
         String trimmed = response.trim();
-
         if (trimmed.startsWith("```")) {
             trimmed = trimmed.replaceFirst("^```(json)?", "");
             trimmed = trimmed.replaceFirst("```$", "");
         }
-
         return trimmed.trim();
     }
 }

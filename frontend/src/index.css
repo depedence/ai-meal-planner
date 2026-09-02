@@ -233,3 +233,54 @@
   -moz-appearance: textfield;
   appearance: textfield;
 }
+
+/* Печать: на лист уходит только сам план или список покупок. Что именно —
+   решает кнопка экспорта, разметку переключает ResultScreen (print:hidden). */
+@media print {
+  @page {
+    margin: 14mm;
+  }
+
+  html,
+  body {
+    background: #fff;
+  }
+
+  /* Заливки, тени и цветной текст на бумаге читаются хуже, чем на экране,
+     и съедают тонер — оставляем чёрный текст на белом и серые линии. */
+  *,
+  *::before,
+  *::after {
+    background: #fff !important;
+    color: #000 !important;
+    box-shadow: none !important;
+    border-color: #b7b7b7 !important;
+    animation: none !important;
+    transition: none !important;
+  }
+
+  /* Декоративные знаки — шевроны раскрытия и логотип в подвале — на листе лишние */
+  svg,
+  img {
+    display: none !important;
+  }
+
+  /* Свёрнутый на экране день печатается целиком: 0fr задан инлайном,
+     поэтому перебиваем его !important и снимаем обрезку с обёрток. */
+  .print-expand {
+    grid-template-rows: 1fr !important;
+  }
+
+  .print-expand > * {
+    overflow: visible !important;
+  }
+
+  .print-expand > * > * {
+    opacity: 1 !important;
+  }
+
+  /* Приём пищи и строка списка покупок не должны рваться между страницами */
+  .print-keep {
+    break-inside: avoid;
+  }
+}

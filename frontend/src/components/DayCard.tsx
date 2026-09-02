@@ -52,7 +52,7 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
 
       {meals.length > 0 && (
         <p
-          className={`hidden truncate px-7.5 text-[13px] text-ink-soft transition-all duration-200 md:block ${
+          className={`hidden truncate px-7.5 text-[13px] text-ink-soft transition-all duration-200 print:hidden md:block ${
             expanded ? 'max-h-0 overflow-hidden opacity-0' : 'max-h-8 pb-5 opacity-100'
           }`}
         >
@@ -60,11 +60,13 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
         </p>
       )}
 
-      {/* grid-rows 0fr -> 1fr даёт плавную анимацию до высоты по содержимому */}
+      {/* grid-rows 0fr -> 1fr даёт плавную анимацию до высоты по содержимому.
+          print-expand раскрывает свёрнутый день на печати: на бумаге плана
+          должно быть видно всё, независимо от того, что открыто на экране. */}
       <div
         id={panelId}
         inert={!expanded}
-        className="grid transition-[grid-template-rows] duration-[220ms] ease-out"
+        className="print-expand grid transition-[grid-template-rows] duration-[220ms] ease-out"
         style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}
       >
         <div className="overflow-hidden">
@@ -78,7 +80,7 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
                 {meals.map((meal, index) => (
                   <div
                     key={`${meal.type}-${index}`}
-                    className={expanded ? 'animate-meal-in' : undefined}
+                    className={`print-keep ${expanded ? 'animate-meal-in' : ''}`}
                     style={{ animationDelay: `${index * 60}ms` }}
                   >
                     <MealBlock meal={meal} />
