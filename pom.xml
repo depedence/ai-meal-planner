@@ -57,6 +57,12 @@
             <artifactId>springboot4-dotenv</artifactId>
             <version>5.0.1</version>
         </dependency>
+        <dependency>
+            <groupId>io.rest-assured</groupId>
+            <artifactId>rest-assured</artifactId>
+            <version>6.0.1</version>
+            <scope>test</scope>
+        </dependency>
 	</dependencies>
 
 	<build>
