@@ -1,0 +1,235 @@
+@import 'tailwindcss';
+
+/* Дизайн-токены «Тёплая бумага» */
+@theme {
+  --color-base: #f3ede4;
+  --color-surface: #fbf7f0;
+  --color-ink: #241c16;
+  --color-ink-hover: #3a2e24;
+  --color-ink-active: #1a1410;
+  --color-ink-muted: #6b5b4a;
+  --color-ink-soft: #8a7b6c;
+  --color-ink-faint: #a2917f;
+  --color-accent: #c4623f;
+  --color-accent-soft: #f6e4da;
+  --color-accent-line: #e8c4b2;
+  --color-accent-press: #f0d8cb;
+  --color-accent-ink: #8a4a2e;
+  --color-line: #dcd1c0;
+  --color-line-hover: #c4a98c;
+  --color-track: #e3d8c7;
+  --color-muted: #efe7da;
+  --color-leader: #d2c4b0;
+  --color-success: #4f7a52;
+  --color-success-soft: #e7efe4;
+  --color-danger: #b3402c;
+  --color-danger-line: #e8bdb2;
+
+  --font-display: 'Newsreader', Georgia, serif;
+  --font-sans: 'Karla', system-ui, sans-serif;
+
+  --radius-xl: 14px;
+  --radius-2xl: 18px;
+  --radius-3xl: 24px;
+
+  --shadow-card: 0 18px 40px -28px rgb(36 28 22 / 0.5);
+  --shadow-hover: 0 14px 28px -20px rgb(36 28 22 / 0.42);
+  --shadow-sticky: 0 -8px 20px -18px rgb(36 28 22 / 0.4);
+
+  --spacing-5\.5: 22px;
+  --spacing-6\.5: 26px;
+  --spacing-7\.5: 30px;
+}
+
+@layer base {
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.5;
+  }
+
+  /* Единый focus-ring по спеке: 2px #C4623F, offset 3px */
+  :focus-visible {
+    outline: 2px solid var(--color-accent);
+    outline-offset: 3px;
+  }
+}
+
+@utility tnum {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Появление экрана */
+@keyframes screen-in {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-screen-in {
+  animation: screen-in 220ms ease-out both;
+}
+
+/* Появление приёма пищи внутри раскрытого дня (со сдвигом по индексу) */
+@keyframes meal-in {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@utility animate-meal-in {
+  animation: meal-in 200ms ease-out both;
+}
+
+/* Индикатор неопределённого прогресса на время запроса к AI */
+@keyframes progress-sweep {
+  from {
+    transform: translateX(-110%);
+  }
+  to {
+    transform: translateX(420%);
+  }
+}
+
+@utility animate-progress {
+  animation: progress-sweep 1.4s ease-in-out infinite;
+}
+
+/* Многоточие в «Считаем план…» */
+@keyframes dot-pulse {
+  0%,
+  60%,
+  100% {
+    opacity: 0.25;
+  }
+  30% {
+    opacity: 1;
+  }
+}
+
+@utility animate-dot {
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  from {
+    background-position: 200% 0;
+  }
+  to {
+    background-position: -200% 0;
+  }
+}
+
+@utility shimmer {
+  background-image: linear-gradient(
+    90deg,
+    var(--color-track) 25%,
+    var(--color-muted) 50%,
+    var(--color-track) 75%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.2s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Ручка слайдера бюджета: 24×24, фон #FBF7F0, border 2px #C4623F */
+.budget-range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  cursor: grab;
+  transition:
+    width 120ms ease-out,
+    height 120ms ease-out,
+    box-shadow 120ms ease-out;
+}
+
+.budget-range::-moz-range-thumb {
+  width: 24px;
+  height: 24px;
+  border-radius: 999px;
+  background: var(--color-surface);
+  border: 2px solid var(--color-accent);
+  cursor: grab;
+  transition: box-shadow 120ms ease-out;
+}
+
+.budget-range:hover:not(:disabled)::-webkit-slider-thumb {
+  width: 26px;
+  height: 26px;
+  box-shadow: 0 0 0 6px rgb(196 98 63 / 0.12);
+}
+
+.budget-range:hover:not(:disabled)::-moz-range-thumb {
+  box-shadow: 0 0 0 6px rgb(196 98 63 / 0.12);
+}
+
+.budget-range:focus-visible::-webkit-slider-thumb {
+  box-shadow: 0 0 0 3px rgb(196 98 63 / 0.35);
+}
+
+.budget-range:focus-visible::-moz-range-thumb {
+  box-shadow: 0 0 0 3px rgb(196 98 63 / 0.35);
+}
+
+.budget-range:active:not(:disabled)::-webkit-slider-thumb {
+  border-width: 3px;
+  cursor: grabbing;
+}
+
+.budget-range:active:not(:disabled)::-moz-range-thumb {
+  border-width: 3px;
+  cursor: grabbing;
+}
+
+.budget-range:disabled::-webkit-slider-thumb {
+  border-color: var(--color-leader);
+  cursor: not-allowed;
+}
+
+.budget-range:disabled::-moz-range-thumb {
+  border-color: var(--color-leader);
+  cursor: not-allowed;
+}
+
+/* Нативные стрелки number-поля мешают степперу */
+.stepper-input::-webkit-outer-spin-button,
+.stepper-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.stepper-input {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}

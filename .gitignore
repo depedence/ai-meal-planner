@@ -4,6 +4,8 @@
 ## Frontend ###
 frontend/node_modules
 frontend/dist
+frontend/dist-ssr
+frontend/*.local
 
 HELP.md
 target/
