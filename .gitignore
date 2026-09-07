@@ -7,6 +7,9 @@ frontend/dist
 frontend/dist-ssr
 frontend/*.local
 
+### Test ###
+e2e-tests/allure-results/
+
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar

@@ -23,12 +23,14 @@ export function HistoryCard({ entry, number, onOpen }: HistoryCardProps) {
 
   return (
     <article
+      data-testid="history-card"
       className={`rounded-2xl border bg-surface transition-colors duration-200 ${
         expanded ? 'border-accent' : 'border-line hover:border-line-hover'
       }`}
     >
       <h3>
         <button
+          data-testid="history-card-toggle"
           type="button"
           aria-expanded={expanded}
           aria-controls={panelId}
@@ -41,7 +43,10 @@ export function HistoryCard({ entry, number, onOpen }: HistoryCardProps) {
             {params.peopleCount}{' '}
             {plural(params.peopleCount, 'человек', 'человека', 'человек')}
           </span>
-          <span className="shrink-0 font-semibold text-accent tnum">
+          <span
+            data-testid="history-card-total"
+            className="shrink-0 font-semibold text-accent tnum"
+          >
             {formatMoney(plan.totalEstimatedPrice)}
           </span>
           <Chevron
@@ -56,6 +61,7 @@ export function HistoryCard({ entry, number, onOpen }: HistoryCardProps) {
       {/* grid-rows 0fr -> 1fr даёт плавную анимацию до высоты по содержимому */}
       <div
         id={panelId}
+        data-testid="history-card-panel"
         inert={!expanded}
         className="grid transition-[grid-template-rows] duration-[220ms] ease-out"
         style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}
@@ -100,6 +106,7 @@ export function HistoryCard({ entry, number, onOpen }: HistoryCardProps) {
             )}
 
             <button
+              data-testid="history-card-open"
               type="button"
               onClick={onOpen}
               className="self-start rounded-xl border border-ink px-5 py-2 text-[13px] font-semibold text-ink transition-colors duration-150 hover:bg-muted active:bg-track"

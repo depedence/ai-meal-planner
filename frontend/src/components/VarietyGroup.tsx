@@ -63,6 +63,7 @@ export function VarietyGroup({ value, onChange, disabled }: VarietyGroupProps) {
         Разнообразие
       </span>
       <div
+        data-testid="variety-group"
         role="radiogroup"
         aria-labelledby="variety-label"
         onKeyDown={handleKeyDown}
@@ -76,6 +77,7 @@ export function VarietyGroup({ value, onChange, disabled }: VarietyGroupProps) {
               ref={(element) => {
                 buttons.current[index] = element
               }}
+              data-testid={`variety-option-${option.value.toLowerCase()}`}
               type="button"
               role="radio"
               aria-checked={selected}

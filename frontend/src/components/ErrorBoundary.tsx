@@ -35,7 +35,7 @@ export class ErrorBoundary extends Component<
     if (!this.state.failed) return this.props.children
 
     return (
-      <div className="flex min-h-dvh flex-col">
+      <div data-testid="error-screen" className="flex min-h-dvh flex-col">
         <main className="mx-auto flex w-full max-w-[1344px] flex-1 flex-col items-start justify-center gap-4 px-5 py-14 lg:px-12">
           <Logo />
           <p className="text-[11px] font-semibold tracking-[0.18em] text-ink-faint uppercase">
@@ -50,6 +50,7 @@ export class ErrorBoundary extends Component<
           </p>
           <div className="flex flex-col gap-2.5 pt-2 sm:flex-row">
             <button
+              data-testid="error-reload"
               type="button"
               onClick={() => window.location.reload()}
               className="inline-flex items-center justify-center rounded-2xl bg-ink px-8.5 py-4 text-base font-semibold text-base transition-all duration-150 ease-out hover:bg-ink-hover active:bg-ink-active"
@@ -57,6 +58,7 @@ export class ErrorBoundary extends Component<
               Обновить страницу
             </button>
             <button
+              data-testid="error-reset"
               type="button"
               onClick={() => {
                 try {

@@ -1,7 +1,10 @@
 /** Текстовый индикатор ожидания: запрос к AI занимает несколько секунд. */
 export function LoadingNote({ className = '' }: { className?: string }) {
   return (
-    <div className={`flex flex-col gap-2 ${className}`}>
+    <div
+      data-testid="loading-note"
+      className={`flex flex-col gap-2 ${className}`}
+    >
       <div className="h-1 overflow-hidden rounded-full bg-track">
         <div className="animate-progress h-full w-1/4 rounded-full bg-accent" />
       </div>
