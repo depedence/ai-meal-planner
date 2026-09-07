@@ -36,7 +36,7 @@ export function BudgetSlider({ value, onChange, disabled }: BudgetSliderProps) {
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div data-testid="budget-field" className="flex flex-col gap-3">
       <div className="flex items-baseline justify-between gap-4">
         <label htmlFor="budget" className="text-sm text-ink-muted">
           Бюджет
@@ -44,6 +44,7 @@ export function BudgetSlider({ value, onChange, disabled }: BudgetSliderProps) {
         {editing ? (
           <input
             ref={inputRef}
+            data-testid="budget-input"
             type="text"
             inputMode="numeric"
             value={draft}
@@ -63,6 +64,7 @@ export function BudgetSlider({ value, onChange, disabled }: BudgetSliderProps) {
           />
         ) : (
           <button
+            data-testid="budget-value"
             type="button"
             onClick={() => {
               setDraft(String(value))
@@ -89,6 +91,7 @@ export function BudgetSlider({ value, onChange, disabled }: BudgetSliderProps) {
         </div>
         <input
           id="budget"
+          data-testid="budget-slider"
           type="range"
           min={BUDGET_MIN}
           max={BUDGET_MAX}

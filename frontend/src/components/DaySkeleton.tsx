@@ -1,6 +1,10 @@
 export function DaySkeleton({ count = 4 }: { count?: number }) {
   return (
-    <div aria-hidden="true" className="flex flex-col gap-3.5">
+    <div
+      data-testid="day-skeleton"
+      aria-hidden="true"
+      className="flex flex-col gap-3.5"
+    >
       {Array.from({ length: count }, (_, index) => (
         <div
           key={index}

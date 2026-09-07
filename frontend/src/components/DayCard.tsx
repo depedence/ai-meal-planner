@@ -17,23 +17,29 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
 
   return (
     <article
+      data-testid="day-card"
       className={`rounded-2xl border bg-surface transition-colors duration-200 ${
         expanded ? 'border-accent' : 'border-line hover:border-line-hover'
       }`}
     >
       <h3>
         <button
+          data-testid="day-card-toggle"
           type="button"
           aria-expanded={expanded}
           aria-controls={panelId}
           onClick={() => setExpanded((open) => !open)}
           className="group flex w-full items-center justify-between gap-4 rounded-2xl px-4.5 py-4 text-left md:px-7.5 md:py-5"
         >
-          <span className="font-display text-[20px] leading-tight text-ink md:text-[26px]">
+          <span
+            data-testid="day-card-title"
+            className="font-display text-[20px] leading-tight text-ink md:text-[26px]"
+          >
             День {day.dayNumber}
           </span>
           <span className="flex shrink-0 items-center gap-3.5">
             <span
+              data-testid="day-card-total"
               className={`text-sm transition-colors duration-200 tnum ${
                 expanded ? 'font-semibold text-accent' : 'text-ink-muted'
               }`}
@@ -52,6 +58,7 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
 
       {meals.length > 0 && (
         <p
+          data-testid="day-card-preview"
           className={`hidden truncate px-7.5 text-[13px] text-ink-soft transition-all duration-200 print:hidden md:block ${
             expanded ? 'max-h-0 overflow-hidden opacity-0' : 'max-h-8 pb-5 opacity-100'
           }`}
@@ -65,6 +72,7 @@ export function DayCard({ day, defaultExpanded = false }: DayCardProps) {
           должно быть видно всё, независимо от того, что открыто на экране. */}
       <div
         id={panelId}
+        data-testid="day-card-panel"
         inert={!expanded}
         className="print-expand grid transition-[grid-template-rows] duration-[220ms] ease-out"
         style={{ gridTemplateRows: expanded ? '1fr' : '0fr' }}

@@ -74,7 +74,10 @@ export function ResultScreen({
   }, [printing])
 
   return (
-    <div className="animate-screen-in mx-auto flex w-full max-w-[1344px] flex-1 flex-col">
+    <div
+      data-testid="result-screen"
+      className="animate-screen-in mx-auto flex w-full max-w-[1344px] flex-1 flex-col"
+    >
       {/* Шапка листа: на экране не нужна, на бумаге заменяет весь интерфейс */}
       <div className="hidden print:mb-4 print:block">
         <h1 className="font-display text-[26px] leading-tight text-ink">
@@ -96,6 +99,7 @@ export function ResultScreen({
         {total > 1 && (
           <div className="flex items-center gap-2">
             <button
+              data-testid="variant-prev"
               type="button"
               onClick={onPrev}
               disabled={!hasPrev || loading}
@@ -108,10 +112,14 @@ export function ResultScreen({
             >
               ‹
             </button>
-            <span className="text-[13px] text-ink-muted tnum">
+            <span
+              data-testid="variant-position"
+              className="text-[13px] text-ink-muted tnum"
+            >
               Вариант {position} из {total}
             </span>
             <button
+              data-testid="variant-next"
               type="button"
               onClick={onNext}
               disabled={!hasNext || loading}
@@ -127,7 +135,7 @@ export function ResultScreen({
           </div>
         )}
 
-        <p className="text-[13px] text-ink-soft tnum">
+        <p data-testid="plan-summary" className="text-[13px] text-ink-soft tnum">
           {params.days} {plural(params.days, 'день', 'дня', 'дней')} ·{' '}
           {params.peopleCount}{' '}
           {plural(params.peopleCount, 'человек', 'человека', 'человек')}
@@ -137,7 +145,11 @@ export function ResultScreen({
       <main className="grid flex-1 grid-cols-1 items-start gap-6 px-5 py-5 print:block print:p-0 lg:grid-cols-[1fr_380px] lg:gap-10 lg:px-12 lg:py-9">
         {/* На мобильном сумма закреплена сверху, на десктопе — в правой колонке */}
         <div className="sticky top-0 z-10 -mx-5 bg-base px-5 pt-1 pb-3 shadow-sticky print:hidden lg:hidden">
-          <TotalPanel total={plan.totalEstimatedPrice} budget={params.budget} />
+          <TotalPanel
+            testId="total-panel-mobile"
+            total={plan.totalEstimatedPrice}
+            budget={params.budget}
+          />
         </div>
 
         <section className="min-w-0 lg:order-1">
@@ -147,6 +159,7 @@ export function ResultScreen({
 
           {(view === 'days' || printing === 'days') && (
             <div
+              data-testid="days-panel"
               role="tabpanel"
               id={panelId(idPrefix, 'days')}
               aria-labelledby={tabId(idPrefix, 'days')}
@@ -155,7 +168,11 @@ export function ResultScreen({
               {loading ? (
                 <DaySkeleton count={Math.min(params.days, 5)} />
               ) : (
-                <div key={entry.id} className="flex flex-col gap-3.5">
+                <div
+                  key={entry.id}
+                  data-testid="day-list"
+                  className="flex flex-col gap-3.5"
+                >
                   {days.map((day, index) => (
                     /* Дни проявляются каскадом — переключение вариантов заметно */
                     <div
@@ -173,6 +190,7 @@ export function ResultScreen({
 
           {(view === 'shopping' || printing === 'shopping') && (
             <div
+              data-testid="shopping-panel"
               role="tabpanel"
               id={panelId(idPrefix, 'shopping')}
               aria-labelledby={tabId(idPrefix, 'shopping')}
@@ -192,6 +210,7 @@ export function ResultScreen({
         <aside className="flex flex-col gap-4 print:hidden lg:sticky lg:top-6 lg:order-2">
           <div className="hidden lg:block">
             <TotalPanel
+              testId="total-panel-desktop"
               total={plan.totalEstimatedPrice}
               budget={params.budget}
             />
@@ -199,6 +218,7 @@ export function ResultScreen({
 
           {error && (
             <p
+              data-testid="result-error"
               role="alert"
               className="animate-screen-in rounded-xl border border-danger-line bg-[#f7e0db] px-4 py-3 text-sm text-danger"
             >
@@ -210,6 +230,7 @@ export function ResultScreen({
 
           <div className="flex gap-2.5">
             <Button
+              data-testid="back-to-form"
               variant="ghost"
               onClick={onBack}
               disabled={loading}
@@ -218,6 +239,7 @@ export function ResultScreen({
               В меню
             </Button>
             <Button
+              data-testid="regenerate-plan"
               onClick={onRetry}
               loading={loading}
               loadingLabel="Собираю…"
@@ -229,6 +251,7 @@ export function ResultScreen({
 
           <div className="flex flex-col gap-2.5">
             <Button
+              data-testid="export-plan"
               variant="ghost"
               onClick={() => setPrinting('days')}
               disabled={loading}
@@ -237,6 +260,7 @@ export function ResultScreen({
               Экспорт плана
             </Button>
             <Button
+              data-testid="export-shopping-list"
               variant="ghost"
               onClick={() => setPrinting('shopping')}
               disabled={loading}

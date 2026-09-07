@@ -28,7 +28,10 @@ export function NumberStepper({
   }
 
   return (
-    <div className="flex min-w-0 flex-1 flex-col gap-2">
+    <div
+      data-testid={`stepper-${id}`}
+      className="flex min-w-0 flex-1 flex-col gap-2"
+    >
       <label htmlFor={id} className="text-sm text-ink-muted">
         {label}
       </label>
@@ -40,6 +43,7 @@ export function NumberStepper({
         }`}
       >
         <button
+          data-testid={`stepper-${id}-decrement`}
           type="button"
           tabIndex={-1}
           aria-hidden="true"
@@ -55,6 +59,7 @@ export function NumberStepper({
         </button>
         <input
           id={id}
+          data-testid={`stepper-${id}-input`}
           type="number"
           inputMode="numeric"
           min={min}
@@ -69,6 +74,7 @@ export function NumberStepper({
           className="stepper-input w-full min-w-0 bg-transparent text-center font-display text-[30px] leading-none text-ink tnum focus-visible:outline-none disabled:text-ink-faint"
         />
         <button
+          data-testid={`stepper-${id}-increment`}
           type="button"
           tabIndex={-1}
           aria-hidden="true"

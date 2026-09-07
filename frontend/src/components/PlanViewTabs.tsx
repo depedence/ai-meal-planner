@@ -38,6 +38,7 @@ export function PlanViewTabs({ value, onChange, idPrefix }: PlanViewTabsProps) {
 
   return (
     <div
+      data-testid="plan-view-tabs"
       role="tablist"
       aria-label="Вид плана"
       onKeyDown={handleKeyDown}
@@ -51,6 +52,7 @@ export function PlanViewTabs({ value, onChange, idPrefix }: PlanViewTabsProps) {
             ref={(element) => {
               buttons.current[index] = element
             }}
+            data-testid={`plan-view-tab-${view.value}`}
             type="button"
             role="tab"
             id={tabId(idPrefix, view.value)}

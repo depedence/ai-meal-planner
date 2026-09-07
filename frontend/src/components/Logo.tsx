@@ -9,7 +9,10 @@ interface LogoProps {
  */
 export function Logo({ className = '' }: LogoProps) {
   return (
-    <span className={`inline-flex items-center gap-2.5 ${className}`}>
+    <span
+      data-testid="logo"
+      className={`inline-flex items-center gap-2.5 ${className}`}
+    >
       <img
         src="/logo.svg"
         alt=""

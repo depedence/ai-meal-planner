@@ -46,7 +46,10 @@ export function FormScreen({
     }
 
     return (
-        <main className="animate-screen-in mx-auto grid w-full max-w-[1344px] flex-1 grid-cols-1 gap-8 px-5 pt-6 pb-5 lg:grid-cols-[1fr_620px] lg:items-center lg:gap-16 lg:px-12 lg:py-14">
+        <main
+            data-testid="form-screen"
+            className="animate-screen-in mx-auto grid w-full max-w-[1344px] flex-1 grid-cols-1 gap-8 px-5 pt-6 pb-5 lg:grid-cols-[1fr_620px] lg:items-center lg:gap-16 lg:px-12 lg:py-14"
+        >
             <section className="flex flex-col gap-4 lg:gap-6">
                 <Logo />
                 <p className="text-[11px] font-semibold tracking-[0.18em] text-ink-faint uppercase">
@@ -64,11 +67,17 @@ export function FormScreen({
                 </p>
 
                 {history.length > 0 && (
-                    <section className="flex flex-col gap-2 pt-2">
+                    <section
+                        data-testid="history-section"
+                        className="flex flex-col gap-2 pt-2"
+                    >
                         <p className="text-[11px] font-semibold tracking-[0.18em] text-ink-faint uppercase">
                             Составленные планы
                         </p>
-                        <ul className="flex flex-col gap-1.5">
+                        <ul
+                            data-testid="history-list"
+                            className="flex flex-col gap-1.5"
+                        >
                             {history
                                 .map((entry, index) => ({
                                     entry,
@@ -96,6 +105,7 @@ export function FormScreen({
             </section>
 
             <form
+                data-testid="plan-form"
                 onSubmit={handleSubmit}
                 className="flex flex-col gap-6.5 rounded-3xl border border-line bg-surface p-6 shadow-card lg:p-9"
             >
@@ -138,6 +148,7 @@ export function FormScreen({
 
                 {error && (
                     <p
+                        data-testid="form-error"
                         role="alert"
                         className="animate-screen-in rounded-xl border border-danger-line bg-[#f7e0db] px-4 py-3 text-sm text-danger"
                     >
@@ -149,6 +160,7 @@ export function FormScreen({
 
                 <div className="mt-auto flex flex-col items-stretch gap-4 sm:flex-row sm:items-center">
                     <Button
+                        data-testid="submit-plan"
                         type="submit"
                         loading={loading}
                         loadingLabel="Собираю план…"

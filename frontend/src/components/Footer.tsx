@@ -4,7 +4,10 @@
  */
 export function Footer() {
   return (
-    <footer className="mx-auto w-full max-w-[1344px] border-t border-line px-5 pt-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] lg:px-12">
+    <footer
+      data-testid="footer"
+      className="mx-auto w-full max-w-[1344px] border-t border-line px-5 pt-5 pb-[calc(1.5rem+env(safe-area-inset-bottom))] lg:px-12"
+    >
       <div className="flex flex-col gap-2 lg:max-w-[104ch]">
         <p className="flex items-center gap-2 text-[13px] text-ink-muted">
           <img
@@ -16,7 +19,10 @@ export function Footer() {
           />
           <span>© {new Date().getFullYear()} depedence</span>
         </p>
-        <p className="text-xs leading-relaxed text-ink-soft text-pretty">
+        <p
+          data-testid="footer-disclaimer"
+          className="text-xs leading-relaxed text-ink-soft text-pretty"
+        >
           План питания формируется автоматически с помощью системы
           искусственного интеллекта (большой языковой модели). Результат носит
           информационно-справочный характер, может содержать неточности и
