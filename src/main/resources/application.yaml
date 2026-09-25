@@ -1,6 +1,20 @@
 spring:
     application:
         name: aimealplanner
+    datasource:
+        url: jdbc:postgresql://localhost:5432/aimealplannerdb
+        username: aimealplanner
+        password: aimealplanner
+        driver-class-name: org.postgresql.Driver
+    jpa:
+        hibernate:
+            ddl-auto: update
+        show-sql: true
+
+jwt:
+    secret: ZGV2LWp3dC1zZWNyZXQtZm9yLWxvY2FsLXVzZS1vbmx5LTEyMzQ1Ng==
+    expiration-ms: 86400000
+    refresh-expiration-ms: 604800000
 
 groq:
     api-key: ${GROQ_API_KEY}
